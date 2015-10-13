@@ -21,45 +21,55 @@ public class PlayerControl : MonoBehaviour {
 
 	void Update() {
 		moveDirection = Vector3.zero;
-		CheckMovementPad();
+		CheckTouches();
 		UpdatePosition();
 	}
 
 	void CheckTouches() {
-		if(Input.touchCount > 0) {
-			foreach(Touch touch in Input.touches) {
-				// Check where touch is, and whether it is in a "no-fire" zone or not.
-				// Need to check if it's on a button or not.
-				// Need to check if it's on the movement pad or not.
-				// If available to fire, take the shot. 
+		if(Input.touchCount <= 0) {
+			PrintDebug("");
+			return;
+		}
+		foreach(Touch touch in Input.touches) {
+			bool consumed = false;
+			if(RectTransformUtility.RectangleContainsScreenPoint(MovementPad, touch.position)) {
+				Vector2 localPosition = Vector2.zero;
+				if(RectTransformUtility.ScreenPointToLocalPointInRectangle(MovementPad, touch.position, null, out localPosition)) {
+					Vector2 dir = localPosition - MovementPad.rect.center;
+					float distance = Vector2.Distance(localPosition, MovementPad.rect.center);
+					float radius = MovementPad.rect.width > MovementPad.rect.height ? MovementPad.rect.height / 2 : MovementPad.rect.width / 2;
+					if(distance < radius/* && distance > radius / 10*/) {
+						moveDirection = dir.normalized;
+						consumed = true;
+					}
+				}
 			}
+			if(!consumed) {
+				Vector3 touchPoint = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, -Camera.main.transform.position.z));
+				Vector3 diff = touchPoint - transform.position;
+				diff.Normalize();
+
+				float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
+				transform.rotation = Quaternion.Euler (0f, 0f, rot_z - 90);
+				FireWeapon(touchPoint);
+			} 
 		}
 	}
 
-	void CheckMovementPad() {
-		foreach(Touch touch in Input.touches) {
-			if(RectTransformUtility.RectangleContainsScreenPoint(MovementPad, touch.position)) {
-				Vector2 localPosition = Vector2.zero;
-				if(!RectTransformUtility.ScreenPointToLocalPointInRectangle(MovementPad, touch.position, null, out localPosition))
-					continue;
-				
-				Vector2 dir = localPosition - MovementPad.rect.center;
-				float distance = Vector2.Distance(localPosition, MovementPad.rect.center);
-				float minSide = MovementPad.rect.width > MovementPad.rect.height ? MovementPad.rect.height : MovementPad.rect.width;
-				if(distance < minSide / 2) {
-					float adjustedDistance = distance / (minSide / 2);
-					moveDirection = dir.normalized * adjustedDistance;
-					PrintDebug("Rect: " + MovementPad.rect.ToString() + ", localPos: " + localPosition + ", Center: " + MovementPad.rect.center + ", Dir: " + dir + ", distance: " + distance + ", minSide: " + minSide + ", adjustedDistance: " + adjustedDistance + ", moveDirection: " + moveDirection);
-				}
-			}
-		}
-	}
-	
 	void UpdatePosition() {
 		if(moveDirection != Vector3.zero) {
 			Vector3 newLocation = transform.position + (moveDirection * speed);
 			transform.position = Vector3.Lerp(transform.position, newLocation, speed * Time.deltaTime);
 		}
+	}
+	
+	private Color[] colors = new Color[12] {Color.red, Color.red, Color.blue, Color.blue, Color.yellow, Color.yellow, Color.green, Color.green, Color.white, Color.white, Color.cyan, Color.cyan};
+	private int index = 0;
+	public void FireWeapon(Vector3 point) {
+		PrintDebug ("IMMA FIRIN MAH LAZER!!!!");
+		Debug.DrawLine(transform.position, point, colors[index]);
+		label.color = colors[index];
+		index = (index + 1) % colors.Length;
 	}
 
 	void PrintDebug(string msg) {
