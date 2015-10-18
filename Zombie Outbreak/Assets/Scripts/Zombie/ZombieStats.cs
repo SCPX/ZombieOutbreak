@@ -2,10 +2,10 @@
 using System.Collections;
 
 public class ZombieStats : MonoBehaviour {
-    public int health = 1;
-    public int damage = 1;
-    public int resistance = 0;
-    public int speed = 2;
+    public float health = 1;
+    public float damage = 1;
+    public float resistance = 0;
+    public float speed = 2;
 	// Use this for initialization
 	void Start () {
 	
