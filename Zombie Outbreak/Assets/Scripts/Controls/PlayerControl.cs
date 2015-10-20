@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerControl : MonoBehaviour {
+    public static PlayerControl Instance;
 	public Text label;
 	public RectTransform MovementPad;
 	public float speed = 0.1f;
@@ -24,6 +25,10 @@ public class PlayerControl : MonoBehaviour {
 	}
 
 	private Rigidbody2D _rigidbody;
+    void Awake()
+    {
+        Instance = this;
+    }
 
 	void Start() {
 		if(label == null || MovementPad == null) {

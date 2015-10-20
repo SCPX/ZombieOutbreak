@@ -32,9 +32,12 @@ public class Bullet : MonoBehaviour {
 
 	void OnCollisionEnter2D(Collision2D collision) {
 		if(collision.gameObject.tag == Constants.Strings.ENEMY_TAG) {
-			// Hurt enemy?
-			// Let the enemy handle this?
-		}
-		Destroy(this.gameObject);
+            // if we get funky results, need to convert V2 -> V3
+            Vector3 knockback = _rigidbody.velocity.normalized * source.GetKnockback();
+            collision.gameObject.SendMessage("TakeDamage", source.GetDamage());
+            collision.gameObject.SendMessage("ReceiveKnockback", knockback);
+            // Let the enemy handle this?
+        }
+        Destroy(this.gameObject);
 	}
 }
