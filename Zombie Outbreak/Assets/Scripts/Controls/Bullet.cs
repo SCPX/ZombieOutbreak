@@ -31,7 +31,6 @@ public class Bullet : MonoBehaviour {
 	}
 
 	void OnCollisionEnter2D(Collision2D collision) {
-		Debug.Log ("Collided with " + collision.gameObject.name);
 		if(collision.gameObject.tag == Constants.Strings.ENEMY_TAG) {
 			// Hurt enemy?
 			// Let the enemy handle this?

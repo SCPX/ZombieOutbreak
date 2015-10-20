@@ -5,11 +5,12 @@ public class ZombieCollision : MonoBehaviour {
     
     void OnCollisionEnter2D(Collision2D col)
     {
-        Debug.Log(col.gameObject.tag);
+        //Debug.Log(col.gameObject.tag);
         if (col.gameObject.tag == "Player")
         {
-            Destroy(col.gameObject);
-            Debug.Log("killed the player");
+			col.gameObject.SendMessage("TakeDamage", 1.0f);
+            //Destroy(col.gameObject);
+            //Debug.Log("killed the player");
         }else if(col.gameObject.tag == "PlayerBullet")
         {
             ZombieStats zombie;

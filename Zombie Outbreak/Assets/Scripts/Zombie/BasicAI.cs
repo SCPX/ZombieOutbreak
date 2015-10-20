@@ -20,7 +20,7 @@ public class BasicAI : MonoBehaviour {
     }
     void OnCollisionEnter2D(Collision2D col)
     {
-        Debug.Log(col.gameObject.tag);
+        //Debug.Log(col.gameObject.tag);
         if (col.gameObject.tag == "Environment")
         {
             Debug.Log("Bumped into something");

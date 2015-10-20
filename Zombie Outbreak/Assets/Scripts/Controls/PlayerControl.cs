@@ -10,7 +10,20 @@ public class PlayerControl : MonoBehaviour {
 	private int movementFingerIndex = -1;
 	private Vector3 moveDirection = Vector3.zero;
 	private Weapon equippedWeapon;
-//	private Rigidbody2D _rigidbody;
+	private float health = 1.0f;
+	
+	public float Health {
+		get{ return health; }
+		set{
+			health = Mathf.Clamp(value, 0f, 1.0f);
+			if(health <= 0f) {
+				// Kill player
+				KillPlayer();
+			}
+		}
+	}
+
+	private Rigidbody2D _rigidbody;
 
 	void Start() {
 		if(label == null || MovementPad == null) {
@@ -21,7 +34,7 @@ public class PlayerControl : MonoBehaviour {
 		if(equippedWeapon == null) { 
 			equippedWeapon = new Gun();
 		}
-		/*_rigidbody = GetComponent<Rigidbody2D>() as Rigidbody2D;
+		_rigidbody = GetComponent<Rigidbody2D>() as Rigidbody2D;
 		if(_rigidbody == null) {
 			_rigidbody = gameObject.AddComponent<Rigidbody2D>() as Rigidbody2D;
 		}//*/
@@ -31,7 +44,7 @@ public class PlayerControl : MonoBehaviour {
 
 	void FixedUpdate() {
 		// Physics must be done on Fixed Update]
-		//UpdatePosition();
+		UpdatePosition();
 	}
 
 	void Update() {
@@ -41,7 +54,7 @@ public class PlayerControl : MonoBehaviour {
 		CheckDebugMovement();
 		CheckDebugFire();
 #endif
-		UpdatePosition();
+		//UpdatePosition();
 	}
 
 	public void ReloadWeapon() {
@@ -90,18 +103,26 @@ public class PlayerControl : MonoBehaviour {
 	void UpdatePosition() {
 		if(moveDirection != Vector3.zero) {
 			Vector3 newLocation = transform.position + (moveDirection * speed);
-			transform.position = Vector3.Lerp(transform.position, newLocation, speed * Time.deltaTime);
-			//PrintDebug("moveDir: " + moveDirection + " currentLoc: " + transform.position + " newLoc: " + newLocation);
-			//_rigidbody.MovePosition(newLocation);
+			_rigidbody.MovePosition(newLocation);
+		} else {
+			// Commented out until performance testing.
+			// Uncomment and set Linear Drag to 0 for better performance, more sudden movement.
+			//_rigidbody.MovePosition(transform.position);
 		}
 	}
 	
-	private Color[] colors = new Color[12] {Color.red, Color.red, Color.blue, Color.blue, Color.yellow, Color.yellow, Color.green, Color.green, Color.white, Color.white, Color.cyan, Color.cyan};
-	private int index = 0;
 	public void FireWeapon(Vector3 point) {
 		// Actual firing of gun....
 		equippedWeapon.Fire (transform.position, transform.rotation);
 		label.text = "Ammo: " + equippedWeapon.GetCurrentAmmo();
+	}
+
+	void KillPlayer() {
+		Destroy(this.gameObject);
+	}
+
+	public void TakeDamage(float damage) {
+		Health -= damage;
 	}
 
 #if UNITY_EDITOR
@@ -124,7 +145,7 @@ public class PlayerControl : MonoBehaviour {
 	void CheckDebugFire() {
 		if(Input.GetMouseButton(0)) {
 			Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
-			Debug.Log ("Mouse Pos: " + Input.mousePosition);
+			//Debug.Log ("Mouse Pos: " + Input.mousePosition);
 
 			bool consumed = false;
 			if(RectTransformUtility.RectangleContainsScreenPoint(MovementPad, mousePosition)) {
