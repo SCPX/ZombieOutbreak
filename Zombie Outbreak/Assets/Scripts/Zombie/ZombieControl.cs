@@ -10,8 +10,8 @@ public class ZombieControl : MonoBehaviour
     private Vector3 moveDirection = Vector3.zero;
     bool stun = false;
     private float timer = 0;
-    public const float MAXTIMER = 2;
-    public const float THRESHOLD = 10;
+    private const float MAXTIMER = 2;
+    private const float THRESHOLD = 15;
 
     public float Health
     {
@@ -45,12 +45,16 @@ public class ZombieControl : MonoBehaviour
         {
             moveDirection = Vector3.zero;
             //insert ai here
-            if (Vector3.Distance(PlayerControl.Instance.transform.position, this.transform.position) < THRESHOLD)
+            if (PlayerControl.Instance != null)
             {
-                moveDirection = (PlayerControl.Instance.transform.position - this.transform.position).normalized;
-            }
-            else {
-                moveDirection = Random.insideUnitCircle.normalized;
+                if (Vector3.Distance(PlayerControl.Instance.transform.position, this.transform.position) < THRESHOLD)
+                {
+                    moveDirection = (PlayerControl.Instance.transform.position - this.transform.position).normalized;
+                }
+                else
+                {
+                    moveDirection = Random.insideUnitCircle.normalized;
+                }
             }
             //if(no player)
             
@@ -60,6 +64,7 @@ public class ZombieControl : MonoBehaviour
         {
             timer -= Time.deltaTime;
         }
+        
         stun = false;
     }
 
@@ -103,6 +108,7 @@ public class ZombieControl : MonoBehaviour
         {
             moveDirection = knockback.normalized * diff;
             stun = true;
+            timer = 0;
         }
     }
 
