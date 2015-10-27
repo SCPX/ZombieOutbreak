@@ -12,7 +12,7 @@ public class ZombieControl : MonoBehaviour
     private float timer = 0; // used in AI to wander around
     private float rot_z = 0; //used to rotate sprite
     private const float MAXTIMER = 2; //used in AI to wander around
-    private const float THRESHOLD = 15;// used in AI to hunt player
+    private const float THRESHOLD = 30;// used in AI to hunt player
 
     public float Health
     {
@@ -71,7 +71,7 @@ public class ZombieControl : MonoBehaviour
             timer -= Time.deltaTime;
         }
         
-        stun = false;
+        //stun = false;
     }
 
     void FixedUpdate()
@@ -84,6 +84,10 @@ public class ZombieControl : MonoBehaviour
 
     void UpdatePosition()
     {
+		if(stun){ 
+			stun = false;
+			return;
+		}
         //this is movement if it has a direction it moves in it
         //otherwise it stays still
         if (moveDirection != Vector3.zero)
@@ -113,8 +117,12 @@ public class ZombieControl : MonoBehaviour
         float diff =  knockback.magnitude - resistance;//calculates knockback and sets the movement direction to match
         if (diff > 0f)
         {
-            moveDirection = knockback.normalized * diff;
-            stun = true;
+            //moveDirection = knockback.normalized * diff;
+			Vector2 force = new Vector2(knockback.x, knockback.y);
+			force = force.normalized * diff; // adjust magnitude to account for resistance.
+			Vector3 oldV = _rigidbody.velocity;
+			_rigidbody.AddForce(force, ForceMode2D.Impulse);
+			stun = true;
             timer = 0;
         }
     }

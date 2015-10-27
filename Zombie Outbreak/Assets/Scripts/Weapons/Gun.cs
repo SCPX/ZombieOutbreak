@@ -6,7 +6,7 @@ public class Gun : Weapon {
 	protected int ammo = 0;
 	protected int maxAmmo = 10;
 	protected string name = "weapon";
-	protected int damage = 1;
+	protected float damage = 0.1f;
 	protected int knockback = 5;
 	protected float fireRate = 5.0f; // in bullets per second
 	protected float range = 100;
@@ -32,7 +32,7 @@ public class Gun : Weapon {
 		initialized = true;
 	}
 
-	public int GetDamage() {
+	public float GetDamage() {
 		return damage;
 	}
 
@@ -49,7 +49,6 @@ public class Gun : Weapon {
 	{
 		if(!initialized) Initialize();
 		if(ammo > 0 && Time.time - fireTime >= (1 / fireRate)) {
-			Debug.Log ("Firing.");
 			GameObject bullet = GameObject.Instantiate(_Bullet, position, rotation) as GameObject;
 			Bullet b = bullet.GetComponent<Bullet>() as Bullet;
 			b.source = this;
