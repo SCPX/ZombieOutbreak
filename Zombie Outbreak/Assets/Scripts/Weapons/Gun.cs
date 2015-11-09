@@ -6,7 +6,7 @@ public class Gun : Weapon {
 	protected int ammo = 0;
 	protected int maxAmmo = 10;
 	protected string name = "weapon";
-	protected float damage = 0.1f;
+	protected float damage = 1.0f;
 	protected int knockback = 5;
 	protected float fireRate = 5.0f; // in bullets per second
 	protected float range = 100;
