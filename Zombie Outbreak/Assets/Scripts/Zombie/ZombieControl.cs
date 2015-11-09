@@ -12,7 +12,7 @@ public class ZombieControl : MonoBehaviour
     private float timer = 0; // used in AI to wander around
     private float rot_z = 0; //used to rotate sprite
     private const float MAXTIMER = 2; //used in AI to wander around
-    private const float THRESHOLD = 30;// used in AI to hunt player
+    private const float THRESHOLD = 20;// used in AI to hunt player
 
     public float Health
     {
