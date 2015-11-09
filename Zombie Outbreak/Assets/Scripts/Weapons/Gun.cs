@@ -45,7 +45,7 @@ public class Gun : Weapon {
 	}
 
 	#region Weapon implementation
-	public bool Fire (Vector3 position, Quaternion rotation)
+	public virtual bool Fire (Vector3 position, Quaternion rotation)
 	{
 		if(!initialized) Initialize();
 		if(ammo > 0 && Time.time - fireTime >= (1 / fireRate)) {
@@ -59,7 +59,7 @@ public class Gun : Weapon {
 		return false;
 	}
 
-	public void Reload ()
+	public virtual void Reload ()
 	{
 		if(!initialized) Initialize();
 		ammo = maxAmmo;
