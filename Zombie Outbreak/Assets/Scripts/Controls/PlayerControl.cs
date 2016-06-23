@@ -97,7 +97,7 @@ public class PlayerControl : MonoBehaviour {
 				Vector3 touchPoint = Camera.main.ScreenToWorldPoint(new Vector3(touch.position.x, touch.position.y, -Camera.main.transform.position.z));
 				Vector3 diff = touchPoint - transform.position;
 				diff.Normalize();
-
+				Debug.Log("Firing");
 				float rot_z = Mathf.Atan2(diff.y, diff.x) * Mathf.Rad2Deg;
 				transform.rotation = Quaternion.Euler (0f, 0f, rot_z - 90);
 				FireWeapon(touchPoint);
@@ -148,7 +148,7 @@ public class PlayerControl : MonoBehaviour {
 	}
 
 	void CheckDebugFire() {
-		if(Input.GetMouseButton(0)) {
+		if(Input.GetMouseButton(0) && Input.touchCount <= 0) {
 			Vector2 mousePosition = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
 			//Debug.Log ("Mouse Pos: " + Input.mousePosition);
 

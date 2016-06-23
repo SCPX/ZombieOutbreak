@@ -134,7 +134,7 @@ public class ZombieControl : MonoBehaviour
             col.gameObject.SendMessage("TakeDamage", damage);//if it hits a player send a message for them to take damage
         }else if(col.gameObject.tag == Constants.Strings.ENVIRONMENT_TAG)
         {
-            Debug.Log("Bumped into something");//when it bumps into the environment change direction
+            //Debug.Log("Bumped into something");//when it bumps into the environment change direction
             timer = 0;
         }
     }
